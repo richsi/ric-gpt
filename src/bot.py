@@ -37,12 +37,13 @@ async def generate_response(message):
     prompt = generate_prompt(str(message.content))
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-         messages = [
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Who won the world series in 2020?"},
-            {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
-            {"role": "user", "content": "Where was it played?"}
-        ],
+        # messages = [
+        #     {"role": "system", "content": "You are a helpful assistant."},
+        #     {"role": "user", "content": "Who won the world series in 2020?"},
+        #     {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
+        #     {"role": "user", "content": "Where was it played?"}
+        # ],
+        messages = [{"role": "user", "content": str(message.content)}],
         # prompt=prompt,
         max_tokens=1024,
         n=1,
@@ -53,7 +54,6 @@ async def generate_response(message):
     prompt_tokens= response['usage']['prompt_tokens']
     total_tokens = response['usage']['total_tokens']
     cost = response['usage']['total_tokens'] * 0.0015
-    # final_response = "Generated with gpt-3.5-turbo: " + response.choices[0].message.content.strip()
     final_response = "Generated with gpt-3.5-turbo: %s\n %s + %s = %s tokens used ($%s)" % (response.choices[0].message.content.strip(), 
                                                                                             str(completion_tokens), str(prompt_tokens), 
                                                                                             str(total_tokens), 
